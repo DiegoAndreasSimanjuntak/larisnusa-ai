@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="dicoding:email" content="diegosimanjuntak2006@gmail.com" />
+    <title>LarisNusa AI - Growth Desk UMKM</title>
+    <link rel="stylesheet" href="styles/larisnusa.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="rail" aria-label="Navigasi utama">
+        <a class="brand" href="#studio" aria-label="LarisNusa AI">
+          <span class="brand-mark">LN</span>
+          <span>
+            <strong>LarisNusa AI</strong>
+            <small>Growth Desk UMKM</small>
+          </span>
+        </a>
+
+        <nav class="nav-list">
+          <a href="#studio" class="active" data-section-link="studio">
+            <span class="nav-icon">01</span>
+            <span>
+              <strong>Studio</strong>
+              <small>Input usaha dan AI copilot</small>
+            </span>
+          </a>
+          <a href="#campaign" data-section-link="campaign">
+            <span class="nav-icon">02</span>
+            <span>
+              <strong>Kampanye</strong>
+              <small>Konten IG, WA, marketplace</small>
+            </span>
+          </a>
+          <a href="#finance" data-section-link="finance">
+            <span class="nav-icon">03</span>
+            <span>
+              <strong>Kas</strong>
+              <small>Transaksi dan export CSV</small>
+            </span>
+          </a>
+          <a href="#customer" data-section-link="customer">
+            <span class="nav-icon">04</span>
+            <span>
+              <strong>Pelanggan</strong>
+              <small>Simulasi balasan WhatsApp</small>
+            </span>
+          </a>
+          <a href="#export" data-section-link="export">
+            <span class="nav-icon">05</span>
+            <span>
+              <strong>Ekspor</strong>
+              <small>Deskripsi bilingual dan USD</small>
+            </span>
+          </a>
+        </nav>
+
+        <section class="rail-card">
+          <span class="label">Status AI</span>
+          <strong id="aiStatus">Local copilot aktif</strong>
+          <p id="onlineStatus">Mengecek koneksi dan kurs ekspor.</p>
+        </section>
+      </aside>
+
+      <main class="workspace">
+        <section class="hero" id="studio">
+          <div class="hero-copy">
+            <p class="eyebrow">MVP Generative AI untuk IDCamp Developer Challenge</p>
+            <h1>Satu meja kerja untuk jualan, catatan kas, pelanggan, dan ekspor UMKM.</h1>
+            <p>
+              Masukkan catatan harian atau foto produk. LarisNusa AI mengubahnya menjadi
+              kampanye siap unggah, ringkasan omzet, balasan WhatsApp, dan deskripsi
+              bilingual dalam satu dashboard halaman tunggal yang mudah dipakai pelaku
+              usaha non-teknis.
+            </p>
+          </div>
+
+          <div class="photo-panel" aria-label="Preview foto produk">
+            <div class="photo-frame">
+              <img id="productPreview" alt="Preview produk UMKM" />
+              <div class="photo-fallback">
+                <span>Foto produk</span>
+                <strong>Unggah visual dagangan</strong>
+              </div>
+            </div>
+            <label class="upload-button" for="productPhoto">Pilih Foto Produk</label>
+            <input id="productPhoto" type="file" accept="image/*" />
+            <p id="visualInsight">Warna dan visual produk akan dipakai untuk menyusun copy promosi.</p>
+          </div>
+        </section>
+
+        <section class="metric-grid" aria-label="Ringkasan usaha">
+          <article class="metric-card">
+            <span>Omzet terdeteksi</span>
+            <strong id="revenueMetric">Rp0</strong>
+            <small id="revenueNote">Isi catatan transaksi untuk menghitung otomatis.</small>
+          </article>
+          <article class="metric-card">
+            <span>Produk unggulan</span>
+            <strong id="topProductMetric">Belum ada</strong>
+            <small>Dipilih dari kontribusi omzet tertinggi.</small>
+          </article>
+          <article class="metric-card">
+            <span>Prioritas hari ini</span>
+            <strong id="priorityMetric">Validasi data</strong>
+            <small id="priorityNote">AI membaca stok, permintaan, dan momen promosi.</small>
+          </article>
+          <article class="metric-card">
+            <span>Nilai USD ekspor</span>
+            <strong id="usdMetric">$0</strong>
+            <small id="rateNote">Menggunakan kurs real-time bila tersedia.</small>
+          </article>
+        </section>
+
+        <section class="studio-grid">
+          <article class="panel input-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Input lapangan</p>
+                <h2>Profil usaha</h2>
+              </div>
+              <button class="icon-button" id="voiceButton" type="button" aria-label="Input suara" title="Input suara">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z" />
+                  <path d="M5 11a7 7 0 0 0 14 0" />
+                  <path d="M12 18v3" />
+                </svg>
+              </button>
+            </div>
+
+            <label for="businessName">Nama usaha</label>
+            <input id="businessName" type="text" value="Dapur Kriuk Bu Sari" />
+
+            <label for="businessType">Kategori UMKM</label>
+            <select id="businessType">
+              <option value="kuliner">Kuliner rumahan</option>
+              <option value="fashion">Fashion lokal</option>
+              <option value="kerajinan">Kerajinan handmade</option>
+              <option value="pertanian">Produk pertanian</option>
+              <option value="jasa">Jasa harian</option>
+            </select>
+
+            <label for="salesNotes">Catatan transaksi, stok, dan pelanggan</label>
+            <textarea id="salesNotes" rows="9">Hari ini terjual 42 risol mayo harga 5000, 18 pastel harga 4000, dan 12 kopi susu gula aren harga 12000. Stok kulit risol tinggal 20 lembar. Banyak pelanggan tanya promo Jumat dan pesan via WhatsApp. Target bulan ini ingin masuk ke kantor sekitar dan marketplace.</textarea>
+
+            <label for="aiGoal">Instruksi untuk AI</label>
+            <textarea id="aiGoal" rows="4">Buat rencana jualan 24 jam: caption Instagram, pesan broadcast WhatsApp, ringkasan kas, risiko stok, dan deskripsi produk bilingual.</textarea>
+
+            <div class="prompt-row" aria-label="Tujuan cepat">
+              <button type="button" data-goal="Buat caption Instagram yang singkat, meyakinkan, dan ada ajakan pesan via WhatsApp.">Caption</button>
+              <button type="button" data-goal="Hitung omzet dari catatan dan beri rekomendasi stok untuk besok.">Kas</button>
+              <button type="button" data-goal="Buat balasan WhatsApp untuk pertanyaan harga, promo, stok, dan cara order.">WA</button>
+              <button type="button" data-goal="Buat deskripsi produk Indonesia-Inggris untuk calon pembeli luar negeri.">Ekspor</button>
+            </div>
+
+            <details class="api-box">
+              <summary>Mode AI API opsional</summary>
+              <p>
+                Untuk demo publik tanpa backend, aplikasi memakai local copilot. Saat produksi,
+                endpoint proxy AI bisa diisi agar prompt dikirim ke server sendiri.
+              </p>
+              <label for="apiEndpoint">Endpoint proxy AI</label>
+              <input id="apiEndpoint" type="url" placeholder="https://domain-anda.com/api/generate" />
+            </details>
+
+            <button class="primary-button" id="generateButton" type="button">Buat Rencana AI</button>
+          </article>
+
+          <article class="panel output-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Hasil generatif</p>
+                <h2>Rencana aksi siap jalan</h2>
+              </div>
+              <button class="icon-button" id="copyButton" type="button" aria-label="Salin hasil" title="Salin hasil">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 8h10v12H8z" />
+                  <path d="M6 16H4V4h12v2" />
+                </svg>
+              </button>
+            </div>
+            <div id="aiOutput" class="ai-output" aria-live="polite"></div>
+          </article>
+        </section>
+
+        <section class="module-grid">
+          <article class="panel" id="campaign">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Kampanye</p>
+                <h2>Konten multi-kanal</h2>
+              </div>
+              <span class="pill" id="campaignTone">Hangat</span>
+            </div>
+            <div id="campaignCards" class="stack"></div>
+          </article>
+
+          <article class="panel" id="finance">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Keuangan</p>
+                <h2>Catatan kas otomatis</h2>
+              </div>
+              <button class="icon-button" id="downloadCsv" type="button" aria-label="Unduh CSV" title="Unduh CSV">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3v12" />
+                  <path d="m7 10 5 5 5-5" />
+                  <path d="M5 21h14" />
+                </svg>
+              </button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Produk</th>
+                    <th>Qty</th>
+                    <th>Harga</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody id="financeRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel" id="customer">
+            <p class="eyebrow">Pelanggan</p>
+            <h2>Simulasi chatbot WhatsApp</h2>
+            <div class="chat-box" id="chatBox"></div>
+            <form class="chat-input" id="chatForm">
+              <input id="customerQuestion" type="text" placeholder="Contoh: Kak ada promo Jumat?" />
+              <button type="submit">Kirim</button>
+            </form>
+          </article>
+
+          <article class="panel" id="export">
+            <p class="eyebrow">Ekspor mikro</p>
+            <h2>Deskripsi dan harga global</h2>
+            <div id="exportCopy" class="export-copy"></div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="scripts/larisnusa.js"></script>
+  </body>
+</html>
