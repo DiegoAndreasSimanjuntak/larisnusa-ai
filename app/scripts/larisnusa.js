@@ -72,6 +72,7 @@ const selectors = {
   campaignTone: document.querySelector("#campaignTone"),
   financeRows: document.querySelector("#financeRows"),
   exportCopy: document.querySelector("#exportCopy"),
+  copyButton: document.querySelector("#copyButton"),
   chatBox: document.querySelector("#chatBox"),
   chatForm: document.querySelector("#chatForm"),
   customerQuestion: document.querySelector("#customerQuestion"),
@@ -335,6 +336,42 @@ function renderPlan(blocks) {
     .join("\n\n");
 }
 
+async function copyText(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.setAttribute("readonly", "");
+  textArea.style.position = "fixed";
+  textArea.style.top = "-999px";
+  textArea.style.opacity = "0";
+  document.body.appendChild(textArea);
+  textArea.select();
+
+  const copied = document.execCommand("copy");
+  textArea.remove();
+
+  if (!copied) {
+    throw new Error("Browser menolak akses salin.");
+  }
+}
+
+function showCopyStatus(status) {
+  const success = status === "success";
+  selectors.copyButton.classList.toggle("is-copied", success);
+  selectors.copyButton.title = success ? "Berhasil disalin" : "Gagal menyalin";
+  selectors.copyButton.setAttribute("aria-label", selectors.copyButton.title);
+
+  window.setTimeout(() => {
+    selectors.copyButton.classList.remove("is-copied");
+    selectors.copyButton.title = "Salin hasil";
+    selectors.copyButton.setAttribute("aria-label", "Salin hasil");
+  }, 1600);
+}
+
 async function requestRemoteAi() {
   const endpoint = selectors.apiEndpoint.value.trim();
   if (!endpoint) {
@@ -556,9 +593,15 @@ document.querySelector("#generateButton").addEventListener("click", requestRemot
 document.querySelector("#downloadCsv").addEventListener("click", downloadCsv);
 document.querySelector("#voiceButton").addEventListener("click", startVoiceInput);
 
-document.querySelector("#copyButton").addEventListener("click", async () => {
+selectors.copyButton.addEventListener("click", async () => {
   if (!state.lastOutputText) buildLocalPlan();
-  await navigator.clipboard.writeText(state.lastOutputText);
+
+  try {
+    await copyText(state.lastOutputText);
+    showCopyStatus("success");
+  } catch {
+    showCopyStatus("error");
+  }
 });
 
 ["input", "change"].forEach((eventName) => {

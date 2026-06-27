@@ -413,6 +413,12 @@ textarea {
   stroke-width: 2;
 }
 
+.icon-button.is-copied {
+  border-color: var(--green);
+  background: var(--leaf);
+  color: var(--green);
+}
+
 .prompt-row {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
