@@ -21,6 +21,8 @@ const state = {
   },
 };
 
+const storageKey = "larisnusa.workspace.v1";
+
 const categoryPlaybook = {
   kuliner: {
     audience: "keluarga, pekerja kantor, dan pelanggan langganan WhatsApp",
@@ -81,6 +83,50 @@ const selectors = {
 const sectionLinks = [...document.querySelectorAll("[data-section-link]")];
 let lockActiveSectionUntil = 0;
 let activeSectionFrame = 0;
+
+function getSavedWorkspace() {
+  try {
+    return JSON.parse(localStorage.getItem(storageKey)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function saveWorkspace() {
+  try {
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        businessName: selectors.businessName.value,
+        businessType: selectors.businessType.value,
+        salesNotes: selectors.salesNotes.value,
+        aiGoal: selectors.aiGoal.value,
+        apiEndpoint: selectors.apiEndpoint.value,
+        visual: state.visual,
+        lastOutputText: state.lastOutputText,
+      }),
+    );
+  } catch {
+    selectors.onlineStatus.textContent = "Data belum bisa disimpan otomatis di browser ini.";
+  }
+}
+
+function restoreWorkspace() {
+  const saved = getSavedWorkspace();
+
+  if (typeof saved.businessName === "string") selectors.businessName.value = saved.businessName;
+  if (typeof saved.businessType === "string" && categoryPlaybook[saved.businessType]) {
+    selectors.businessType.value = saved.businessType;
+  }
+  if (typeof saved.salesNotes === "string") selectors.salesNotes.value = saved.salesNotes;
+  if (typeof saved.aiGoal === "string") selectors.aiGoal.value = saved.aiGoal;
+  if (typeof saved.apiEndpoint === "string") selectors.apiEndpoint.value = saved.apiEndpoint;
+  if (saved.visual?.colorName && saved.visual?.hex) {
+    state.visual = saved.visual;
+    selectors.visualInsight.textContent = `Visual produk terakhir bernuansa ${state.visual.colorName}. Copy promosi akan dibuat lebih selaras dengan foto.`;
+  }
+  if (typeof saved.lastOutputText === "string") state.lastOutputText = saved.lastOutputText;
+}
 
 function setActiveSection(id) {
   sectionLinks.forEach((link) => {
@@ -334,6 +380,8 @@ function renderPlan(blocks) {
       return `${block.title}\n${content}`;
     })
     .join("\n\n");
+
+  saveWorkspace();
 }
 
 async function copyText(text) {
@@ -515,6 +563,7 @@ function analyzeImage(file) {
       selectors.visualInsight.textContent = `Visual produk terbaca bernuansa ${state.visual.colorName}. Copy promosi akan dibuat lebih selaras dengan foto.`;
       renderCampaign();
       buildLocalPlan();
+      saveWorkspace();
     };
     image.src = reader.result;
   };
@@ -557,6 +606,7 @@ function startVoiceInput() {
   recognition.onresult = (event) => {
     selectors.salesNotes.value += ` ${event.results[0][0].transcript}`;
     buildLocalPlan();
+    saveWorkspace();
   };
   recognition.start();
 }
@@ -565,6 +615,7 @@ document.querySelectorAll("[data-goal]").forEach((button) => {
   button.addEventListener("click", () => {
     selectors.aiGoal.value = button.dataset.goal;
     buildLocalPlan();
+    saveWorkspace();
   });
 });
 
@@ -605,12 +656,21 @@ selectors.copyButton.addEventListener("click", async () => {
 });
 
 ["input", "change"].forEach((eventName) => {
-  selectors.salesNotes.addEventListener(eventName, updateMetrics);
+  selectors.salesNotes.addEventListener(eventName, () => {
+    updateMetrics();
+    saveWorkspace();
+  });
   selectors.businessType.addEventListener(eventName, () => {
     updateMetrics();
     buildLocalPlan();
+    saveWorkspace();
   });
-  selectors.businessName.addEventListener(eventName, updateMetrics);
+  selectors.businessName.addEventListener(eventName, () => {
+    updateMetrics();
+    saveWorkspace();
+  });
+  selectors.aiGoal.addEventListener(eventName, saveWorkspace);
+  selectors.apiEndpoint.addEventListener(eventName, saveWorkspace);
 });
 
 window.addEventListener("online", fetchExchangeRate);
@@ -620,6 +680,7 @@ window.addEventListener("offline", () => {
 window.addEventListener("scroll", requestActiveSectionUpdate, { passive: true });
 window.addEventListener("resize", requestActiveSectionUpdate);
 
+restoreWorkspace();
 addChatBubble("Halo Kak, mau tanya harga, promo, stok, atau pengiriman? Saya bantu jawab cepat.", "bot");
 fetchExchangeRate();
 buildLocalPlan();
