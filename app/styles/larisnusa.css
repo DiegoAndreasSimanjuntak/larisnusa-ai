@@ -296,6 +296,7 @@ h3 {
 
 .upload-button,
 .primary-button,
+.secondary-button,
 .prompt-row button,
 .chat-input button {
   border: 0;
@@ -313,6 +314,20 @@ h3 {
   color: #fff;
   background: var(--green);
   text-align: center;
+}
+
+.secondary-button {
+  min-height: 50px;
+  padding: 13px 18px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.action-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
 }
 
 #visualInsight {
@@ -642,7 +657,8 @@ th {
   }
 
   .metric-grid,
-  .prompt-row {
+  .prompt-row,
+  .action-row {
     grid-template-columns: 1fr;
   }
 

@@ -75,6 +75,7 @@ const selectors = {
   financeRows: document.querySelector("#financeRows"),
   exportCopy: document.querySelector("#exportCopy"),
   copyButton: document.querySelector("#copyButton"),
+  resetWorkspace: document.querySelector("#resetWorkspace"),
   chatBox: document.querySelector("#chatBox"),
   chatForm: document.querySelector("#chatForm"),
   customerQuestion: document.querySelector("#customerQuestion"),
@@ -126,6 +127,30 @@ function restoreWorkspace() {
     selectors.visualInsight.textContent = `Visual produk terakhir bernuansa ${state.visual.colorName}. Copy promosi akan dibuat lebih selaras dengan foto.`;
   }
   if (typeof saved.lastOutputText === "string") state.lastOutputText = saved.lastOutputText;
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (char) => {
+    const entities = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    };
+    return entities[char];
+  });
+}
+
+function resetWorkspace() {
+  try {
+    localStorage.removeItem(storageKey);
+  } catch {
+    selectors.onlineStatus.textContent = "Data tersimpan belum bisa dihapus otomatis.";
+    return;
+  }
+
+  window.location.reload();
 }
 
 function setActiveSection(id) {
@@ -267,7 +292,7 @@ function renderFinance() {
     .map(
       (row) => `
         <tr>
-          <td>${row.name}</td>
+          <td>${escapeHtml(row.name)}</td>
           <td>${row.qty}</td>
           <td>${rupiah.format(row.price)}</td>
           <td>${rupiah.format(row.subtotal)}</td>
@@ -308,7 +333,7 @@ function renderCampaign() {
       body: `${product} dari ${business}. ${playbook.angle}. Siap dipesan untuk kebutuhan harian, hadiah, atau konsumsi kantor. Chat untuk cek stok dan pengiriman.`,
     },
   ]
-    .map((item) => `<section class="campaign-card"><h3>${item.title}</h3><p>${item.body}</p></section>`)
+    .map((item) => `<section class="campaign-card"><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.body)}</p></section>`)
     .join("");
 }
 
@@ -317,8 +342,8 @@ function renderExport() {
   const price = topProduct ? topProduct.price : total || 25000;
 
   selectors.exportCopy.innerHTML = `
-    <p><strong>Indonesia:</strong> ${product} dari ${business} adalah produk lokal Indonesia dengan nilai utama: ${playbook.angle}. Cocok untuk pembeli yang mencari produk praktis, autentik, dan mudah dipesan.</p>
-    <p><strong>English:</strong> ${product} by ${business} is an Indonesian local product focused on ${playbook.angle}. It is suitable for customers looking for something practical, authentic, and easy to order.</p>
+    <p><strong>Indonesia:</strong> ${escapeHtml(product)} dari ${escapeHtml(business)} adalah produk lokal Indonesia dengan nilai utama: ${escapeHtml(playbook.angle)}. Cocok untuk pembeli yang mencari produk praktis, autentik, dan mudah dipesan.</p>
+    <p><strong>English:</strong> ${escapeHtml(product)} by ${escapeHtml(business)} is an Indonesian local product focused on ${escapeHtml(playbook.angle)}. It is suitable for customers looking for something practical, authentic, and easy to order.</p>
     <p><strong>Estimasi harga global:</strong> ${rupiah.format(price)} per item atau sekitar ${usd.format(price / state.exchangeRate)}.</p>
   `;
 }
@@ -367,10 +392,10 @@ function renderPlan(blocks) {
   selectors.aiOutput.innerHTML = blocks
     .map((block) => {
       if (block.list) {
-        return `<section class="result-card"><h3>${block.title}</h3><ul>${block.list.map((item) => `<li>${item}</li>`).join("")}</ul></section>`;
+        return `<section class="result-card"><h3>${escapeHtml(block.title)}</h3><ul>${block.list.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul></section>`;
       }
 
-      return `<section class="result-card"><h3>${block.title}</h3><p>${block.body}</p></section>`;
+      return `<section class="result-card"><h3>${escapeHtml(block.title)}</h3><p>${escapeHtml(block.body)}</p></section>`;
     })
     .join("");
 
@@ -643,6 +668,7 @@ selectors.chatForm.addEventListener("submit", (event) => {
 document.querySelector("#generateButton").addEventListener("click", requestRemoteAi);
 document.querySelector("#downloadCsv").addEventListener("click", downloadCsv);
 document.querySelector("#voiceButton").addEventListener("click", startVoiceInput);
+selectors.resetWorkspace.addEventListener("click", resetWorkspace);
 
 selectors.copyButton.addEventListener("click", async () => {
   if (!state.lastOutputText) buildLocalPlan();

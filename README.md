@@ -78,3 +78,7 @@ http://localhost:5173
 ## Catatan Teknis
 
 MVP ini berjalan client-side agar mudah didemokan dan tidak membutuhkan instalasi backend. Untuk versi produksi, database dapat ditambahkan untuk menyimpan profil usaha, riwayat transaksi, template konten, riwayat chat pelanggan, dan laporan penjualan.
+
+## Catatan Privasi
+
+Data demo disimpan di `localStorage` browser pengguna agar input tidak hilang saat halaman di-refresh. Aplikasi tidak mengirim data ke server sendiri; data hanya dikirim keluar jika pengguna mengisi endpoint proxy AI opsional.
