@@ -143,6 +143,9 @@ function escapeHtml(value) {
 }
 
 function resetWorkspace() {
+  const confirmed = window.confirm("Reset demo dan hapus data yang tersimpan di browser ini?");
+  if (!confirmed) return;
+
   try {
     localStorage.removeItem(storageKey);
   } catch {
